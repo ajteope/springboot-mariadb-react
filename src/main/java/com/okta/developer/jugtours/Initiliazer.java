@@ -28,7 +28,7 @@ class Initializer implements CommandLineRunner {
                 "Richmond JUG").forEach(name ->
                 groupRepository.save(new Group(name))
         );
-        
+         
         groupRepository.findAll().forEach(System.out::println);
     }
 }
