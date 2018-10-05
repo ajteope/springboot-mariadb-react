@@ -1,6 +1,7 @@
 package com.okta.developer.jugtours;
 
 import com.okta.developer.jugtours.model.Event;
+import com.okta.developer.jugtours.model.EventRepository;
 import com.okta.developer.jugtours.model.Group;
 import com.okta.developer.jugtours.model.GroupRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -13,27 +14,21 @@ import java.util.stream.Stream;
 @Component
 class Initializer implements CommandLineRunner {
 
-    private final GroupRepository repository;
+    private final GroupRepository groupRepository;
+    private final EventRepository eventRepository;
 
-    public Initializer(GroupRepository repository) {
-        this.repository = repository;
+    public Initializer(GroupRepository groupRepository, EventRepository eventRepository) {
+        this.groupRepository = groupRepository;
+        this.eventRepository = eventRepository;
     }
 
     @Override
     public void run(String... strings) {
         Stream.of("Denver JUG", "Utah JUG", "Seattle JUG",
                 "Richmond JUG").forEach(name ->
-                repository.save(new Group(name))
+                groupRepository.save(new Group(name))
         );
-
-        Group djug = repository.findByName("Denver JUG");
-        Event e = Event.builder().title("Full Stack Reactive")
-                .description("Reactive with Spring Boot + React")
-                .date(Instant.parse("2018-12-12T18:00:00.000Z"))
-                .build();
-        djug.setEvents(Collections.singleton(e));
-        repository.save(djug);
-
-        repository.findAll().forEach(System.out::println);
+        
+        groupRepository.findAll().forEach(System.out::println);
     }
 }
